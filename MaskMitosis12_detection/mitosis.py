@@ -1,4 +1,4 @@
-"""
+	"""
 Usage: 
 
     # To train MaskMitosis on the 2012 MITOSIS dataset:    
@@ -106,16 +106,15 @@ class MitosisDataset(utils.Dataset):
                     
         # Add images
         for image_id in image_ids:
+        	image_id_dir = os.path.join(dataset_dir,image_id)
             if subset_dir=="train":
-                self.add_image(
-                        "mitosis",
-                        image_id=image_id,
-                        path=os.path.join(dataset_dir, image_id, "images/{}.jpg".format(image_id)))
+            	for f in next(os.walk(image_id_dir))[2]:
+            		if f.endswith(".jpg"):
+                		self.add_image("mitosis",image_id=image_id,path=os.path.join(image_id_dir, f))
             else:
-                self.add_image(
-                        "mitosis",
-                        image_id=image_id,
-                        path=os.path.join(dataset_dir, image_id, "images/{}.bmp".format(image_id)))
+            	for f in next(os.walk(image_id_dir))[2]:
+            		if f.endswith(".bmp"):
+            			self.add_image("mitosis",image_id=image_id,path=os.path.join(image_id_dir, f))
                 
 
     def load_mask(self, image_id):
@@ -132,7 +131,7 @@ class MitosisDataset(utils.Dataset):
         # Read mask files from .jpg image
         mask = []
         for f in next(os.walk(mask_dir))[2]:
-            if f.endswith(".jpg"):
+            if f.endswith(".jpg"):	
                 m = skimage.io.imread(os.path.join(mask_dir, f)).astype(np.bool)
                 mask.append(m)
         mask = np.stack(mask, axis=-1)
