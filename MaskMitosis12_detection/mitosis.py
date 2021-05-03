@@ -1,4 +1,4 @@
-	"""
+"""
 Usage: 
 
     # To train MaskMitosis on the 2012 MITOSIS dataset:    
@@ -20,7 +20,6 @@ Usage:
     test __ __ __ imageName __ __ __ images __ __ __ imageName.bmp
                      
 """
-
 if __name__ == '__main__':
     import matplotlib
     # Agg backend runs without a display
@@ -91,8 +90,8 @@ class MitosisDataset(utils.Dataset):
         """Load a subset of the mitosis dataset.
 
         dataset_dir: Root directory of the dataset
-        subset: Subset to load. 
-                * train: images of the training set 
+        subset: Subset to load.
+                * train: images of the training set
                 * test: images of the test set
         """
         # Add classes. We have one class.
@@ -101,21 +100,19 @@ class MitosisDataset(utils.Dataset):
 
         assert subset in ["train", "test"]
         subset_dir = subset
-        dataset_dir = os.path.join(dataset_dir, subset_dir)	
+        dataset_dir = os.path.join(dataset_dir, subset_dir)
         image_ids = next(os.walk(dataset_dir))[1]
-                    
         # Add images
         for image_id in image_ids:
-        	image_id_dir = os.path.join(dataset_dir,image_id)
-            if subset_dir=="train":
-            	for f in next(os.walk(image_id_dir))[2]:
-            		if f.endswith(".jpg"):
-                		self.add_image("mitosis",image_id=image_id,path=os.path.join(image_id_dir, f))
+            image_id_dir = os.path.join(dataset_dir, image_id)
+            if subset_dir == "train":
+                for f in next(os.walk(image_id_dir))[2]:
+                    if f.endswith(".jpg"):
+                        self.add_image("mitosis", image_id=image_id, path=os.path.join(image_id_dir, f))
             else:
-            	for f in next(os.walk(image_id_dir))[2]:
-            		if f.endswith(".bmp"):
-            			self.add_image("mitosis",image_id=image_id,path=os.path.join(image_id_dir, f))
-                
+                for f in next(os.walk(image_id_dir))[2]:
+                    if f.endswith(".bmp"):
+                        self.add_image("mitosis", image_id=image_id, path=os.path.join(image_id_dir, f))
 
     def load_mask(self, image_id):
         """Generate instance masks for an image.
@@ -131,7 +128,7 @@ class MitosisDataset(utils.Dataset):
         # Read mask files from .jpg image
         mask = []
         for f in next(os.walk(mask_dir))[2]:
-            if f.endswith(".jpg"):	
+            if f.endswith(".jpg"):
                 m = skimage.io.imread(os.path.join(mask_dir, f)).astype(np.bool)
                 mask.append(m)
         mask = np.stack(mask, axis=-1)
@@ -157,7 +154,7 @@ def train(model, dataset_dir, subset):
     # Training dataset.
     dataset_train = MitosisDataset()
     dataset_train.load_mitosis(dataset_dir, subset)
-    dataset_train.prepare()    
+    dataset_train.prepare()
 
     # Image augmentation
     # http://imgaug.readthedocs.io/en/latest/source/augmenters.html
